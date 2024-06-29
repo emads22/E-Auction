@@ -1,6 +1,6 @@
 # E-Auction
 
-## Description
+## Overview
 E-Auction is an eBay-like e-commerce auction platform where users can create auction listings, place bids, comment on listings, and manage their watchlist. This application was developed as part of my [**CS50W**](https://cs50.harvard.edu/web/2020/) **`Second Project`** in 2023. You can explore its development on [me/50](https://github.com/me50/emads22/tree/web50/projects/2020/x/commerce) repository.
 
 ---
