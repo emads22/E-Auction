@@ -1,0 +1,53 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <div class="container-fluid px-5 py-4 text-color">
+
+        {% if message %}
+            <div class="alert alert-dark" role="alert">
+                <em>{{ message }}</em>
+            </div>
+        {% endif %}
+
+        <div class="pb-4 border-bottom">
+            <h1 class="pt-2 pb-4">
+                Register
+            </h1>
+            <hr><br>
+        </div>
+
+        <div class="container">
+            <div class="d-flex justify-content-center">
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="col-auto mb-4 text-color">
+                        <input autofocus class="form-control form-control-lg" type="text" name="username" placeholder="Username">
+                    </div>
+                    <div class="col-auto mb-4 text-color">
+                        <input class="form-control form-control-lg" type="email" name="email" placeholder="Email Address">
+                    </div>
+                    <div class="col-auto mb-4 text-color">
+                        <input class="form-control form-control-lg" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="col-auto mb-4 text-color">
+                        <input class="form-control form-control-lg" type="password" name="confirmation" placeholder="Confirm Password">
+                    </div>
+                    
+                    <div class="col-auto">
+                        <button type="submit" class="form-control btn btn-secondary btn-lg mt-2 mb-4 fs-4">
+                            Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <p class="text-center mt-2 mb-4 text-color fs-4">
+                Already have an account? <a href="{% url 'login' %}" class="mx-2 link-secondary"><strong>Log In here.</strong></a>
+            </p>
+        </div>
+
+    </div>
+
+{% endblock %}

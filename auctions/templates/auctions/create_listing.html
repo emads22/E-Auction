@@ -1,0 +1,50 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <div class="container-fluid px-5 py-4 text-color">
+
+        {% if create_listing_flash %}
+            <div class="alert alert-dark" role="alert">
+                <em>{{ create_listing_flash }}</em>
+            </div>
+            <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 3 seconds here -->
+            <meta http-equiv="refresh" content="3;url={% url 'create_listing' %}">
+        {% endif %}
+
+        <div class="pb-4 border-bottom">
+            <h1 class="pt-2 pb-4">
+                Create New Listing
+            </h1>
+            <hr><br>
+        </div>
+        
+        <div class="container">
+            <form action="{% url 'create_listing' %}" method="post">
+                {% csrf_token %}
+                
+                {% for field in listing_form %}
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        <div class="col-md-3 form-group mb-4 text-color">
+                            <label for="{{ field.id_for_label }}" class="col-form-label fs-5"><strong>{{ field.label }}:</strong></label>
+                        </div>
+                        <div class="col-md-9 mb-4 ">
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-3">
+                        <button type="submit" class="form-control btn btn-secondary btn-lg my-5 fs-4">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+

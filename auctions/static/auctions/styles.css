@@ -1,0 +1,45 @@
+body {
+    color: #27374D;
+    background-color: #DDE6ED;
+    margin: 0;
+    padding: 0;
+}
+
+
+a {
+    text-decoration: none;
+}
+
+
+.list-group-item-primary {
+    background-color: #DDE6ED;
+}
+
+
+.bg-navbar, .bg-card, .categories {
+    background-color: #9DB2BF;
+}
+
+
+.btn {
+    background-color: #526D82;
+}
+
+
+.link-secondary {
+    color: #9DB2BF;
+}
+
+
+.text-color {
+    color: #27374D;
+}
+
+
+.comments {
+    list-style-type: square;
+}
+
+
+
+/* colors:  https://colorhunt.co/palette/faf1e4cedebd9eb384435334 */

@@ -1,0 +1,183 @@
+{% extends "auctions/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+
+    <div class="container-fluid px-5 py-4 text-color">
+        
+        {% if is_winner %}
+            <div class="alert alert-dark" role="alert">
+                <h4 class="alert-heading">
+                    <img class="me-3" src="{% static 'auctions/icons/confetti1.png' %}" alt="confetti icon"> 
+                    Congratulations! 
+                    <img class="mx-3" src="{% static 'auctions/icons/confetti1.png' %}" alt="confetti icon">
+                </h4>
+                <p>
+                    You are the lucky winner of the auction for the <strong>{{ listing.title }}</strong> listing with your winning bid of <strong>${{ current_bid.amount }}</strong>. 
+                    <img class="mx-3" src="{% static 'auctions/icons/trophy.png' %}" alt="trophy icon">
+                    <br>
+                    We are thrilled to inform you that your bid on this item was the highest, and you have successfully secured it. 
+                    <img class="mx-3" src="{% static 'auctions/icons/confetti2.png' %}" alt="confetti icon">
+                    <br>
+                    Thank you for participating in this auction, and we hope you enjoy your new purchase! For further assistance, feel free to reach out to our customer support team.  
+                    <img class="mx-3" src="{% static 'auctions/icons/customer-service.png' %}" alt="customer-service icon">
+                </p>
+            </div>
+            <hr>
+        {% endif %}
+
+        {% if watchlist_flash %}
+            <div class="alert alert-dark" role="alert">
+                <em>{{ watchlist_flash }}</em>
+            </div>
+            <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 3 seconds here -->
+            <meta http-equiv="refresh" content="3;url={% url 'listing' listing.id %}">
+        {% elif bid_flash %}
+            {% if "success" in bid_flash %}
+                <div class="alert alert-dark">
+                    <em>{{ bid_flash }}</em>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    <em>{{ bid_flash }}</em>
+                </div>
+            {% endif %}
+            <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 3 seconds here -->
+            <meta http-equiv="refresh" content="3;url={% url 'listing' listing.id %}">
+        {% elif comment_flash %}
+            <div class="alert alert-dark" role="alert">
+                <em>{{ comment_flash }}</em>
+            </div>
+            <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 3 seconds here -->
+            <meta http-equiv="refresh" content="3;url={% url 'listing' listing.id %}">
+        {% elif auction_flash %}
+            <div class="alert alert-dark" role="alert">
+                <em>{{ auction_flash }}</em>
+            </div>
+            <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 3 seconds here -->
+            <meta http-equiv="refresh" content="3;url={% url 'listing' listing.id %}">
+        {% endif %}
+
+        <div class="row row-cols-1 row-cols-md-2 mb-3">
+            <h1 class="col pt-2 pb-4">
+                {{ listing.title }}
+            </h1>   
+            <div class="col pt-2 pb-4 d-flex justify-content-end">     
+                {% if user.is_authenticated and listing.active and user != listing.seller %}
+                    {% if not is_listing_in_watchlist %}
+                        <a href="{% url 'add_watchlist' listing.id %}">
+                            <button class="btn btn-secondary btn-lg">Add to watchlist</button>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'remove_watchlist' listing.id %}">
+                            <button class="btn btn-secondary btn-lg">Remove from watchlist</button>
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+           
+        </div>
+     
+        <hr><br><br>
+
+        <div class="row row-cols-1 row-cols-md-2 mb-3">
+            <div class="col-md-5" style="max-width: 800px;">
+                <img src="{{ listing.image_url }}" class="img-fluid img-thumbnail" alt="{{ listing.title }}">
+            </div>
+            <div class="col-md-7 my-3">
+            <!-- Description list alignment -->
+            <dl class="row container-fluid">
+                <dt class="col-sm-3 mb-4 fs-5">Description</dt>
+                <dd class="col-sm-9 mb-4">{{ listing.description }}</dd>
+            
+                <dt class="col-sm-3 mb-4 fs-5">Category</dt>
+                <dd class="col-sm-9 mb-4">{{ listing.category.name }}</dd>
+            
+                <dt class="col-sm-3 mb-4 fs-5">Starting Bid</dt>
+                <dd class="col-sm-9 mb-4">${{ listing.starting_bid }}</dd>
+            
+                <dt class="col-sm-3 mb-4 fs-5">Current Bid</dt>
+                <dd class="col-sm-9 mb-4">
+                <p>${{ current_bid.amount }}</p>
+                <p>
+                    {% if user.is_authenticated and listing.active and user == listing.seller %}
+                        <div  class="mt-5">
+                            <a href="{% url 'close_auction' listing.id %}"><button class="btn btn-secondary btn-lg">Close Auction</button></a>
+                        </div>
+                    {% elif user.is_authenticated and listing.active %}
+                    <form action="{% url 'bid' listing.id %}" method="post" class="row mb-3">
+                        <div class="row row-cols-1 row-cols-md-9">
+                            <div class="col">
+                                {% csrf_token %}
+                                {{ bid_form.as_p }}
+                            </div>  
+                            <div class="col mt-2">
+                                <button type="submit" class="btn btn-secondary btn-lg">Place Bid</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                </p>
+                </dd>
+            
+                <dt class="col-sm-3 mb-4 fs-5">Total Bids</dt>
+                <dd class="col-sm-9 mb-4">
+                    <p>
+                        {{ total_bids }} bid(s) so far.
+                        {% if user == current_bid.bidder and user != listing.seller %}
+                            <span class="ms-2">Your bid is the current bid.</span>
+                        {% endif %}
+                    </p>
+                </dd>
+
+                <dt class="col-sm-3 mb-4 fs-5">Seller</dt>
+                <dd class="col-sm-9 mb-4">{{ listing.seller }}</dd>
+            
+                
+                <dt class="col-sm-3 mb-4 fs-5">Comments</dt>
+                <dd class="col-sm-9 mb-4">
+                <br>
+                <ul class="comments">
+                    {% for comment in comments %}
+                    <li>
+                        <figure>
+                        <p class="list-inline-item">{{ comment.text }}</p>
+                        <!-- Naming a source (Blockquote) -->
+                        <figcaption class="blockquote-footer list-inline-item">
+                            <strong>{{ comment.author }}</strong> - posted on <cite title="Source Title">{{ comment.date_posted }}</cite>
+                        </figcaption>
+                        {% if user.is_authenticated and user == comment.author %}
+                            <a href="{% url 'delete_comment' comment.id %}" class="link-dark list-inline-item"><i class="fi fi-rr-trash"></i></a>
+                        {% endif %}
+                        </figure>
+                    </li>
+                    {% empty %}
+                    <li>
+                        <figure>
+                        <p>No comments on this listing yet.</p>
+                        </figure>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if user.is_authenticated and listing.active %}
+                    <form action="{% url 'comment' listing.id %}" method="post" class="row mb-3">
+                        <div class="row row-cols-1 row-cols-md-9">
+                            <div class="col">
+                                {% csrf_token %}
+                                {{ comment_form.as_p }}
+                            </div>  
+                            <div class="col mt-2">
+                                <button type="submit" class="btn btn-secondary btn-lg">Add Comment</button>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+                </dd>
+            </dl>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

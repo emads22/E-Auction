@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <div class="container-fluid px-5 py-4 text-color">
+
+        <div class="pb-4 border-bottom">
+            <h1 class="pt-2 pb-4">
+                Categories
+            </h1>
+            <hr><br>
+        </div>
+        
+        <div class="list-group">
+            {% for category in categories %}
+                <a href="{% url 'category_listings' category.id %}" class="list-group-item list-group-item-action list-group-item-primary">
+                    <strong class="text-color fs-5">{{ category.name }}</strong>
+                </a>
+            {% empty %}
+                <li class="list-group-item list-group-item-primary">
+                    <strong class="text-color fs-5">No Categories Yet.</strong>
+                </li>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock %}
